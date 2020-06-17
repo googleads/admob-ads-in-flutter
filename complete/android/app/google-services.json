@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "295535434875",
+    "firebase_url": "https://awesome-drawing-quiz-2019.firebaseio.com",
+    "project_id": "awesome-drawing-quiz-2019",
+    "storage_bucket": "awesome-drawing-quiz-2019.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:295535434875:android:05b5af5b91034fa6",
+        "android_client_info": {
+          "package_name": "com.codelab.awesomedrawingquiz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "295535434875-ouvjf7ov70mef2amq8d3uqkf6jjebspg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNp3YXENiPnk_5pzL_sMmUzGlN7rrco-0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "295535434875-ouvjf7ov70mef2amq8d3uqkf6jjebspg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "295535434875-uoauk1mckdvqtplua4il68i9m473fdtb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.codelab.awesomedrawingquiz.unity"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:295535434875:android:d40cd6f0571fffcb",
+        "android_client_info": {
+          "package_name": "com.codelab.awesomedrawingquiz.unity"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "295535434875-ouvjf7ov70mef2amq8d3uqkf6jjebspg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNp3YXENiPnk_5pzL_sMmUzGlN7rrco-0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "295535434875-ouvjf7ov70mef2amq8d3uqkf6jjebspg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "295535434875-uoauk1mckdvqtplua4il68i9m473fdtb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.codelab.awesomedrawingquiz.unity"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
