@@ -15,7 +15,6 @@
 // COMPLETE: Import ad_manager.dart
 import 'package:awesome_drawing_quiz/ad_manager.dart';
 import 'package:awesome_drawing_quiz/app_theme.dart';
-// COMPLETE: Import firebase_admob.dart
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 
@@ -25,10 +24,10 @@ class HomeRoute extends StatefulWidget {
 }
 
 class _HomeRouteState extends State<HomeRoute> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.primary,
       body: FutureBuilder<void>(
         future: _initAdMob(),
         builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
@@ -73,14 +72,11 @@ class _HomeRouteState extends State<HomeRoute> {
             ));
           }
 
-          return Scaffold(
-            backgroundColor: AppTheme.primary,
-            body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: children,
-              ),
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: children,
             ),
           );
         },
