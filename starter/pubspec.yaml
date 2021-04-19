@@ -14,18 +14,18 @@
 
 name: awesome_drawing_quiz
 description: Sample app for &#x27;Adding AdMob Ads to a Flutterr app&#x27; Codelab.
-
+publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  google_fonts: ^0.3.9
+  google_fonts: ^2.0.0
 
-  # TODO: Add firebase_admob as a dependency
+  # TODO: Add google_mobile_ads as a dependency
 
 dev_dependencies:
   flutter_test:

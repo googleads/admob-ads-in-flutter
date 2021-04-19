@@ -58,7 +58,7 @@ class Drawing {
 }
 
 class Stroke {
-  List<Point> _points;
+  late List<Point> _points;
   
   List<Point> get points => _points;
 
@@ -69,7 +69,7 @@ class Stroke {
   Stroke._fromCoordinatesList(List<int> xCoords, List<int> yCoords) {
     assert(xCoords.length == yCoords.length);
 
-    List<Point<double>> pts = new List<Point<double>>();
+    List<Point<double>> pts = [];
     for (int i = 0; i < xCoords.length; i++) {
       pts.add(Point(xCoords[i].toDouble(), yCoords[i].toDouble()));
     }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.codelab.awesome_drawing_quiz
+package com.codelab.awesomedrawingquiz
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
@@ -22,7 +22,4 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugins.GeneratedPluginRegistrant
 
 class MainActivity: FlutterActivity() {
-    override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
-        GeneratedPluginRegistrant.registerWith(flutterEngine);
-    }
 }
