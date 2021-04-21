@@ -24,11 +24,11 @@ class QuizManager {
 
   static QuizManager get instance => _instance;
 
+  late Drawing _drawing;
+
+  late String _clue;
+
   int _currentLevel = 1;
-
-  Drawing _drawing;
-
-  String _clue;
 
   bool _isHintUsed = false;
 
@@ -36,7 +36,7 @@ class QuizManager {
 
   int _correctAnswers = 0;
 
-  QuizEventListener listener;
+  QuizEventListener? listener;
 
   int get currentLevel => _currentLevel;
 
@@ -53,7 +53,7 @@ class QuizManager {
 
   void checkAnswer(String answer) {
     bool correct = _drawing.word == answer.toLowerCase();
-    
+
     if (correct) {
       _correctAnswers++;
       if (!_isFinalLevel()) {
@@ -69,7 +69,6 @@ class QuizManager {
     _isHintUsed = true;
     _disclosedLettersCnt++;
     _clue = _generateClue();
-    print(_clue);
 
     listener?.onClueUpdated(_clue);
   }

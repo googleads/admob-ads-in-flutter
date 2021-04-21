@@ -18,15 +18,15 @@ import 'package:flutter/material.dart';
 class DrawingPainter extends CustomPainter {
   Drawing drawing;
 
-  Paint _paint;
+  Paint _paint = new Paint()
+    ..color = Colors.black
+    ..strokeCap = StrokeCap.round
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 4.0;
 
-  DrawingPainter({@required this.drawing}) {
-    _paint = new Paint()
-      ..color = Colors.black
-      ..strokeCap = StrokeCap.round
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 4.0;
-  }
+  DrawingPainter({
+    required this.drawing,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -42,8 +42,8 @@ class DrawingPainter extends CustomPainter {
 
       for (int i = 1; i < points.length; i++) {
         path.lineTo(
-            _scale(points[i].x, size.width),
-            _scale(points[i].y, size.height),
+          _scale(points[i].x, size.width),
+          _scale(points[i].y, size.height),
         );
       }
 
@@ -56,7 +56,7 @@ class DrawingPainter extends CustomPainter {
     return oldDelegate.drawing.word != this.drawing.word;
   }
 
-  double _scale(double original, double axisLength) {
+  double _scale(num original, num axisLength) {
     return original * (axisLength / 256);
   }
 }
