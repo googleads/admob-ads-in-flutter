@@ -24,11 +24,11 @@ class QuizManager {
 
   static QuizManager get instance => _instance;
 
+  late Drawing _drawing;
+
+  late String _clue;
+
   int _currentLevel = 1;
-
-  Drawing _drawing;
-
-  String _clue;
 
   bool _isHintUsed = false;
 
@@ -36,7 +36,7 @@ class QuizManager {
 
   int _correctAnswers = 0;
 
-  QuizEventListener listener;
+  QuizEventListener? listener;
 
   int get currentLevel => _currentLevel;
 

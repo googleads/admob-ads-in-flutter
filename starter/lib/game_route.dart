@@ -12,10 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// TODO: Import ad_manager.dart
+// TODO: Import ad_helper.dart
 
-// TODO: Import firebase_admob.dart
-
+// TODO: Import google_mobile_ads.dart
 
 import 'package:awesome_drawing_quiz/app_theme.dart';
 import 'package:awesome_drawing_quiz/drawing.dart';
@@ -29,25 +28,23 @@ class GameRoute extends StatefulWidget {
 }
 
 class _GameRouteState extends State<GameRoute> implements QuizEventListener {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  late int _level;
 
-  int _level;
+  late Drawing _drawing;
 
-  Drawing _drawing;
-
-  String _clue;
+  late String _clue;
 
   // TODO: Add _bannerAd
 
+  // TODO: Add _isBannerAdReady
 
   // TODO: Add _interstitialAd
 
-
   // TODO: Add _isInterstitialAdReady
 
+  // TODO: Add _rewardedAd
 
   // TODO: Add _isRewardedAdReady
-
 
   @override
   void initState() {
@@ -57,42 +54,27 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
       ..listener = this
       ..startGame();
 
-    // TODO: Initialize _isInterstitialAdReady
-
-
-    // TODO: Initialize _isRewardedAdReady
-
-
     // TODO: Initialize _bannerAd
-
 
     // TODO: Initialize _interstitialAd
 
-
-    // TODO: Set Rewarded Ad Event listener
-
-
-    // TODO: Load a Banner Ad
-
-
-    // TODO: Load a Rewarded Ad
+    // TODO: Initialize _rewardedAd
 
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
       backgroundColor: AppTheme.primary,
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Stack(
-          children: <Widget>[
+          children: [
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
+                children: [
                   SizedBox(
                     height: 24,
                   ),
@@ -103,7 +85,12 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
                   SizedBox(
                     height: 20,
                   ),
-                  OutlineButton(
+                  OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(32.0),
+                      ),
+                    ),
                     onPressed: () {
                       showDialog(
                         context: context,
@@ -118,8 +105,8 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
                                 _answer = value;
                               },
                             ),
-                            actions: <Widget>[
-                              FlatButton(
+                            actions: [
+                              TextButton(
                                 child: Text('submit'.toUpperCase()),
                                 onPressed: () {
                                   Navigator.pop(context);
@@ -131,15 +118,17 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
                         },
                       );
                     },
-                    child: Text(
-                      _clue,
-                      style: TextStyle(
-                        fontSize: 24,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24.0,
+                        vertical: 16.0,
                       ),
-                    ),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 16,
+                      child: Text(
+                        _clue,
+                        style: TextStyle(
+                          fontSize: 24,
+                        ),
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -149,7 +138,7 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
                     color: Colors.white,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
+                      children: [
                         Container(
                           padding: EdgeInsets.all(24),
                           child: CustomPaint(
@@ -169,6 +158,7 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
                 ],
               ),
             ),
+            // TODO: Display a banner when ready
           ],
         ),
       ),
@@ -177,8 +167,8 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
       bottomNavigationBar: BottomAppBar(
         child: ButtonBar(
           alignment: MainAxisAlignment.start,
-          children: <Widget>[
-            FlatButton(
+          children: [
+            TextButton(
               child: Text('Skip this level'.toUpperCase()),
               onPressed: () {
                 QuizManager.instance.nextLevel();
@@ -190,49 +180,30 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
     );
   }
 
-  Widget _buildFloatingActionButton() {
+  Widget? _buildFloatingActionButton() {
     // TODO: Return a FloatingActionButton if a Rewarded Ad is available
     return null;
   }
 
   void _moveToHome() {
-    Navigator.pushNamedAndRemoveUntil(
-        _scaffoldKey.currentContext, '/', (_) => false);
+    Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
   }
 
   void _showSnackBar(String message) {
-    _scaffoldKey.currentState.showSnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
       ),
     );
   }
 
-  // TODO: Implement _loadBannerAd()
-
-
-  // TODO: Implement _loadInterstitialAd()
-
-
-  // TODO: Implement _loadRewardedAd()
-
-
-  // TODO: Implement _onInterstitialAdEvent()
-
-
-  // TODO: Implement _onRewardedAdEvent()
-
-
   @override
   void dispose() {
-    // TODO: Dispose BannerAd object
+    // TODO: Dispose a BannerAd object
 
+    // TODO: Dispose an InterstitialAd object
 
-    // TODO: Dispose InterstitialAd object
-
-
-    // TODO: Remove Rewarded Ad event listener
-
+    // TODO: Dispose a RewardedAd object
 
     QuizManager.instance.listener = null;
 
@@ -253,7 +224,6 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
     });
 
     // TODO: Load an Interstitial Ad
-
   }
 
   @override
@@ -264,17 +234,16 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
   @override
   void onGameOver(int correctAnswers) {
     showDialog(
-      context: _scaffoldKey.currentContext,
+      context: context,
       builder: (context) {
         return AlertDialog(
           title: Text('Game over!'),
           content: Text('Score: $correctAnswers/5'),
-          actions: <Widget>[
-            FlatButton(
+          actions: [
+            TextButton(
               child: Text('close'.toUpperCase()),
               onPressed: () {
                 // TODO: Display an Interstitial Ad
-
 
                 _moveToHome();
               },
