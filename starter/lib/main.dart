@@ -29,9 +29,9 @@ void main() async {
 
   runApp(
     MaterialApp(
-      home: HomeRoute(),
+      home: HomePage(),
       routes: <String, WidgetBuilder>{
-        '/home': (BuildContext context) => new HomeRoute(),
+        '/home': (BuildContext context) => new HomePage(),
         '/game': (BuildContext context) => new GameRoute()
       },
       theme: ThemeData(
