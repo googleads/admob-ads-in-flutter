@@ -4,8 +4,8 @@ In this Codelab, you'll learn how to add AdMob ads to a Flutter app.
 
 ## What you'll need
 
-* Android Studio 3.6 or higher
-* Xcode (for iOS support)
+* Android Studio 4.1 or later
+* Xcode 12 or later (for iOS development)
 
 ## Getting started
 

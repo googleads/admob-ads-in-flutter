@@ -56,8 +56,6 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
 
     // TODO: Initialize _bannerAd
 
-    // TODO: Initialize _interstitialAd
-
     // TODO: Initialize _rewardedAd
 
   }
@@ -196,6 +194,12 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
       ),
     );
   }
+
+  // TODO: Implement _loadInterstitialAd()
+
+
+  // TODO: Implement _loadRewardedAd()
+
 
   @override
   void dispose() {
