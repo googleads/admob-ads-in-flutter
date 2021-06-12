@@ -26,7 +26,7 @@ dependencies:
   google_fonts: ^2.0.0
 
   # COMPLETE: Add google_mobile_ads as a dependency
-  google_mobile_ads: ^0.12.0
+  google_mobile_ads: ^0.13.0
 
 dev_dependencies:
   flutter_test:

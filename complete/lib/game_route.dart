@@ -44,13 +44,13 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
   bool _isBannerAdReady = false;
 
   // COMPLETE: Add _interstitialAd
-  late InterstitialAd _interstitialAd;
+  InterstitialAd? _interstitialAd;
 
   // COMPLETE: Add _isInterstitialAdReady
   bool _isInterstitialAdReady = false;
 
   // COMPLETE: Add _rewardedAd
-  late RewardedAd _rewardedAd;
+  RewardedAd? _rewardedAd;
 
   // COMPLETE: Add _isRewardedAdReady
   bool _isRewardedAdReady = false;
@@ -68,7 +68,7 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
       adUnitId: AdHelper.bannerAdUnitId,
       request: AdRequest(),
       size: AdSize.banner,
-      listener: AdListener(
+      listener: BannerAdListener(
         onAdLoaded: (_) {
           setState(() {
             _isBannerAdReady = true;
@@ -84,54 +84,8 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
 
     _bannerAd.load();
 
-    // COMPLETE: Initialize _interstitialAd
-    _interstitialAd = InterstitialAd(
-      adUnitId: AdHelper.interstitialAdUnitId,
-      request: AdRequest(),
-      listener: AdListener(
-        onAdLoaded: (_) {
-          _isInterstitialAdReady = true;
-        },
-        onAdFailedToLoad: (ad, err) {
-          print('Failed to load an interstitial ad: ${err.message}');
-          _isInterstitialAdReady = false;
-          ad.dispose();
-        },
-        onAdClosed: (_) {
-          _moveToHome();
-        },
-      ),
-    );
-
-    // COMPLETE: Initialize _rewardedAd
-    _rewardedAd = RewardedAd(
-      adUnitId: AdHelper.rewardedAdUnitId,
-      request: AdRequest(),
-      listener: AdListener(
-        onAdLoaded: (_) {
-          setState(() {
-            _isRewardedAdReady = true;
-          });
-        },
-        onAdFailedToLoad: (ad, err) {
-          print('Failed to load a rewarded ad: ${err.message}');
-          _isRewardedAdReady = false;
-          ad.dispose();
-        },
-        onAdClosed: (_) {
-          setState(() {
-            _isRewardedAdReady = false;
-          });
-          _rewardedAd.load();
-        },
-        onRewardedAdUserEarnedReward: (_, reward) {
-          QuizManager.instance.useHint();
-        },
-      ),
-    );
-
     // COMPLETE: Load a Rewarded Ad
-    _rewardedAd.load();
+    _loadRewardedAd();
   }
 
   @override
@@ -283,7 +237,11 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
                         child: Text('ok'.toUpperCase()),
                         onPressed: () {
                           Navigator.pop(context);
-                          _rewardedAd.show();
+                          _rewardedAd?.show(
+                            onUserEarnedReward: (_, reward) {
+                              QuizManager.instance.useHint();
+                            },
+                          );
                         },
                       ),
                     ],
@@ -309,16 +267,73 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
     );
   }
 
+  // COMPLETE: Implement _loadInterstitialAd()
+  void _loadInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: AdHelper.interstitialAdUnitId,
+      request: AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (ad) {
+          this._interstitialAd = ad;
+
+          ad.fullScreenContentCallback = FullScreenContentCallback(
+            onAdDismissedFullScreenContent: (ad) {
+              _moveToHome();
+            },
+          );
+
+          _isInterstitialAdReady = true;
+        },
+        onAdFailedToLoad: (err) {
+          print('Failed to load an interstitial ad: ${err.message}');
+          _isInterstitialAdReady = false;
+        },
+      ),
+    );
+  }
+
+  // COMPLETE: Implement _loadRewardedAd()
+  void _loadRewardedAd() {
+    RewardedAd.load(
+      adUnitId: AdHelper.rewardedAdUnitId,
+      request: AdRequest(),
+      rewardedAdLoadCallback: RewardedAdLoadCallback(
+        onAdLoaded: (ad) {
+          this._rewardedAd = ad;
+
+          ad.fullScreenContentCallback = FullScreenContentCallback(
+            onAdDismissedFullScreenContent: (ad) {
+              setState(() {
+                _isRewardedAdReady = false;
+              });
+              _loadRewardedAd();
+            },
+          );
+
+          setState(() {
+            _isRewardedAdReady = true;
+          });
+        },
+        onAdFailedToLoad: (err) {
+          print('Failed to load a rewarded ad: ${err.message}');
+          setState(() {
+            _isRewardedAdReady = false;
+          });
+        },
+      ),
+    );
+  }
+
   @override
   void dispose() {
     // COMPLETE: Dispose a BannerAd object
     _bannerAd.dispose();
 
     // COMPLETE: Dispose an InterstitialAd object
-    _interstitialAd.dispose();
+    _interstitialAd?.dispose();
 
     // COMPLETE: Dispose a RewardedAd object
-    _rewardedAd.dispose();
+    _rewardedAd?.dispose();
 
     QuizManager.instance.listener = null;
 
@@ -340,7 +355,7 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
 
     // COMPLETE: Load an Interstitial Ad
     if (level >= 3 && !_isInterstitialAdReady) {
-      _interstitialAd.load();
+      _loadInterstitialAd();
     }
   }
 
@@ -363,7 +378,7 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
               onPressed: () {
                 // COMPLETE: Display an Interstitial Ad
                 if (_isInterstitialAdReady) {
-                  _interstitialAd.show();
+                  _interstitialAd?.show();
                 } else {
                   _moveToHome();
                 }
