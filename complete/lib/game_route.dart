@@ -18,42 +18,29 @@ import 'package:awesome_drawing_quiz/app_theme.dart';
 import 'package:awesome_drawing_quiz/drawing.dart';
 import 'package:awesome_drawing_quiz/drawing_painter.dart';
 import 'package:awesome_drawing_quiz/quiz_manager.dart';
+import 'package:flutter/material.dart';
 
 // COMPLETE: Import google_mobile_ads.dart
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:flutter/material.dart';
 
 import 'quiz_manager.dart';
 
 class GameRoute extends StatefulWidget {
+  const GameRoute({Key? key}) : super(key: key);
+
   @override
-  _GameRouteState createState() => _GameRouteState();
+  State<GameRoute> createState() => _GameRouteState();
 }
 
 class _GameRouteState extends State<GameRoute> implements QuizEventListener {
-  late int _level;
-
-  late Drawing _drawing;
-
-  late String _clue;
-
   // COMPLETE: Add _bannerAd
-  late BannerAd _bannerAd;
-
-  // COMPLETE: Add _isBannerAdReady
-  bool _isBannerAdReady = false;
+  BannerAd? _bannerAd;
 
   // COMPLETE: Add _interstitialAd
   InterstitialAd? _interstitialAd;
 
-  // COMPLETE: Add _isInterstitialAdReady
-  bool _isInterstitialAdReady = false;
-
   // COMPLETE: Add _rewardedAd
   RewardedAd? _rewardedAd;
-
-  // COMPLETE: Add _isRewardedAdReady
-  bool _isRewardedAdReady = false;
 
   @override
   void initState() {
@@ -63,28 +50,25 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
       ..listener = this
       ..startGame();
 
-    // COMPLETE: Initialize _bannerAd
-    _bannerAd = BannerAd(
+    // COMPLETE: Load a banner ad
+    BannerAd(
       adUnitId: AdHelper.bannerAdUnitId,
-      request: AdRequest(),
+      request: const AdRequest(),
       size: AdSize.banner,
       listener: BannerAdListener(
-        onAdLoaded: (_) {
+        onAdLoaded: (ad) {
           setState(() {
-            _isBannerAdReady = true;
+            _bannerAd = ad as BannerAd;
           });
         },
         onAdFailedToLoad: (ad, err) {
-          print('Failed to load a banner ad: ${err.message}');
-          _isBannerAdReady = false;
+          debugPrint('Failed to load a banner ad: ${err.message}');
           ad.dispose();
         },
       ),
-    );
+    ).load();
 
-    _bannerAd.load();
-
-    // COMPLETE: Load a Rewarded Ad
+    // COMPLETE: Load a rewarded Ad
     _loadRewardedAd();
   }
 
@@ -101,16 +85,12 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    height: 24,
-                  ),
+                  const SizedBox(height: 24),
                   Text(
-                    'Level $_level/5',
-                    style: TextStyle(fontSize: 32),
+                    'Level ${QuizManager.instance.currentLevel}/5',
+                    style: const TextStyle(fontSize: 32),
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
+                  const SizedBox(height: 20),
                   OutlinedButton(
                     style: OutlinedButton.styleFrom(
                       shape: RoundedRectangleBorder(
@@ -121,14 +101,14 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
                       showDialog(
                         context: context,
                         builder: (context) {
-                          String _answer = '';
+                          var answer = '';
 
                           return AlertDialog(
-                            title: Text('Enter your answer'),
+                            title: const Text('Enter your answer'),
                             content: TextField(
                               autofocus: true,
                               onChanged: (value) {
-                                _answer = value;
+                                answer = value;
                               },
                             ),
                             actions: [
@@ -136,7 +116,7 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
                                 child: Text('submit'.toUpperCase()),
                                 onPressed: () {
                                   Navigator.pop(context);
-                                  QuizManager.instance.checkAnswer(_answer);
+                                  QuizManager.instance.checkAnswer(answer);
                                 },
                               ),
                             ],
@@ -150,48 +130,46 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
                         vertical: 16.0,
                       ),
                       child: Text(
-                        _clue,
-                        style: TextStyle(
-                          fontSize: 24,
+                        QuizManager.instance.clue,
+                        style: const TextStyle(
+                          fontSize: 24.0
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
+                  const SizedBox(height: 20.0),
                   Card(
                     color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                    margin: const EdgeInsets.all(16.0),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Container(
-                          padding: EdgeInsets.all(24),
+                          padding: const EdgeInsets.all(24.0),
                           child: CustomPaint(
-                            size: Size(300, 300),
+                            size: const Size(300, 300),
                             painter: DrawingPainter(
-                              drawing: _drawing,
+                              drawing: QuizManager.instance.drawing,
                             ),
                           ),
                         )
                       ],
                     ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    margin: EdgeInsets.all(16),
                   ),
                 ],
               ),
             ),
             // COMPLETE: Display a banner when ready
-            if (_isBannerAdReady)
+            if (_bannerAd != null)
               Align(
                 alignment: Alignment.topCenter,
-                child: Container(
-                  width: _bannerAd.size.width.toDouble(),
-                  height: _bannerAd.size.height.toDouble(),
-                  child: AdWidget(ad: _bannerAd),
+                child: SizedBox(
+                  width: _bannerAd!.size.width.toDouble(),
+                  height: _bannerAd!.size.height.toDouble(),
+                  child: AdWidget(ad: _bannerAd!),
                 ),
               ),
           ],
@@ -217,15 +195,15 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
 
   Widget? _buildFloatingActionButton() {
     // COMPLETE: Return a FloatingActionButton if a Rewarded Ad is available
-    return (!QuizManager.instance.isHintUsed && _isRewardedAdReady)
+    return (!QuizManager.instance.isHintUsed && _rewardedAd != null)
         ? FloatingActionButton.extended(
             onPressed: () {
               showDialog(
                 context: context,
                 builder: (context) {
                   return AlertDialog(
-                    title: Text('Need a hint?'),
-                    content: Text('Watch an Ad to get a hint!'),
+                    title: const Text('Need a hint?'),
+                    content: const Text('Watch an Ad to get a hint!'),
                     actions: [
                       TextButton(
                         child: Text('cancel'.toUpperCase()),
@@ -249,8 +227,8 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
                 },
               );
             },
-            label: Text('Hint'),
-            icon: Icon(Icons.card_giftcard),
+            label: const Text('Hint'),
+            icon: const Icon(Icons.card_giftcard),
           )
         : null;
   }
@@ -271,22 +249,21 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
   void _loadInterstitialAd() {
     InterstitialAd.load(
       adUnitId: AdHelper.interstitialAdUnitId,
-      request: AdRequest(),
+      request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {
-          this._interstitialAd = ad;
-
           ad.fullScreenContentCallback = FullScreenContentCallback(
             onAdDismissedFullScreenContent: (ad) {
               _moveToHome();
             },
           );
 
-          _isInterstitialAdReady = true;
+          setState(() {
+            _interstitialAd = ad;
+          });
         },
         onAdFailedToLoad: (err) {
-          print('Failed to load an interstitial ad: ${err.message}');
-          _isInterstitialAdReady = false;
+          debugPrint('Failed to load an interstitial ad: ${err.message}');
         },
       ),
     );
@@ -296,29 +273,25 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
   void _loadRewardedAd() {
     RewardedAd.load(
       adUnitId: AdHelper.rewardedAdUnitId,
-      request: AdRequest(),
+      request: const AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (ad) {
-          this._rewardedAd = ad;
-
           ad.fullScreenContentCallback = FullScreenContentCallback(
             onAdDismissedFullScreenContent: (ad) {
               setState(() {
-                _isRewardedAdReady = false;
+                ad.dispose();
+                _rewardedAd = null;
               });
               _loadRewardedAd();
             },
           );
 
           setState(() {
-            _isRewardedAdReady = true;
+            _rewardedAd = ad;
           });
         },
         onAdFailedToLoad: (err) {
-          print('Failed to load a rewarded ad: ${err.message}');
-          setState(() {
-            _isRewardedAdReady = false;
-          });
+          debugPrint('Failed to load a rewarded ad: ${err.message}');
         },
       ),
     );
@@ -327,7 +300,7 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
   @override
   void dispose() {
     // COMPLETE: Dispose a BannerAd object
-    _bannerAd.dispose();
+    _bannerAd?.dispose();
 
     // COMPLETE: Dispose an InterstitialAd object
     _interstitialAd?.dispose();
@@ -347,14 +320,10 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
 
   @override
   void onNewLevel(int level, Drawing drawing, String clue) {
-    setState(() {
-      _level = level;
-      _drawing = drawing;
-      _clue = clue;
-    });
+    setState(() {});
 
     // COMPLETE: Load an Interstitial Ad
-    if (level >= 3 && !_isInterstitialAdReady) {
+    if (level >= 3 && _interstitialAd == null) {
       _loadInterstitialAd();
     }
   }
@@ -370,14 +339,14 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Game over!'),
+          title: const Text('Game over!'),
           content: Text('Score: $correctAnswers/5'),
           actions: [
             TextButton(
               child: Text('close'.toUpperCase()),
               onPressed: () {
                 // COMPLETE: Display an Interstitial Ad
-                if (_isInterstitialAdReady) {
+                if (_interstitialAd != null) {
                   _interstitialAd?.show();
                 } else {
                   _moveToHome();
@@ -392,9 +361,7 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
 
   @override
   void onClueUpdated(String clue) {
-    setState(() {
-      _clue = clue;
-    });
+    setState(() {});
 
     _showSnackBar('You\'ve got one more clue!');
   }

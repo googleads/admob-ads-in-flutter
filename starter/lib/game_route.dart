@@ -23,28 +23,18 @@ import 'package:awesome_drawing_quiz/quiz_manager.dart';
 import 'package:flutter/material.dart';
 
 class GameRoute extends StatefulWidget {
+  const GameRoute({Key? key}) : super(key: key);
+
   @override
-  _GameRouteState createState() => _GameRouteState();
+  State<GameRoute> createState() => _GameRouteState();
 }
 
 class _GameRouteState extends State<GameRoute> implements QuizEventListener {
-  late int _level;
-
-  late Drawing _drawing;
-
-  late String _clue;
-
   // TODO: Add _bannerAd
-
-  // TODO: Add _isBannerAdReady
 
   // TODO: Add _interstitialAd
 
-  // TODO: Add _isInterstitialAdReady
-
   // TODO: Add _rewardedAd
-
-  // TODO: Add _isRewardedAdReady
 
   @override
   void initState() {
@@ -54,10 +44,9 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
       ..listener = this
       ..startGame();
 
-    // TODO: Initialize _bannerAd
+    // TODO: Load a banner ad
 
-    // TODO: Initialize _rewardedAd
-
+    // TODO: Load a rewarded ad
   }
 
   @override
@@ -73,16 +62,12 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    height: 24,
-                  ),
+                  const SizedBox(height: 24),
                   Text(
-                    'Level $_level/5',
-                    style: TextStyle(fontSize: 32),
+                    'Level ${QuizManager.instance.currentLevel}/5',
+                    style: const TextStyle(fontSize: 32),
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
+                  const SizedBox(height: 20),
                   OutlinedButton(
                     style: OutlinedButton.styleFrom(
                       shape: RoundedRectangleBorder(
@@ -93,14 +78,14 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
                       showDialog(
                         context: context,
                         builder: (context) {
-                          String _answer = '';
+                          var answer = '';
 
                           return AlertDialog(
-                            title: Text('Enter your answer'),
+                            title: const Text('Enter your answer'),
                             content: TextField(
                               autofocus: true,
                               onChanged: (value) {
-                                _answer = value;
+                                answer = value;
                               },
                             ),
                             actions: [
@@ -108,7 +93,7 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
                                 child: Text('submit'.toUpperCase()),
                                 onPressed: () {
                                   Navigator.pop(context);
-                                  QuizManager.instance.checkAnswer(_answer);
+                                  QuizManager.instance.checkAnswer(answer);
                                 },
                               ),
                             ],
@@ -122,36 +107,32 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
                         vertical: 16.0,
                       ),
                       child: Text(
-                        _clue,
-                        style: TextStyle(
-                          fontSize: 24,
-                        ),
+                        QuizManager.instance.clue,
+                        style: const TextStyle(fontSize: 24),
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
+                  const SizedBox(height: 20.0),
                   Card(
                     color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                    margin: const EdgeInsets.all(16.0),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Container(
-                          padding: EdgeInsets.all(24),
+                          padding: const EdgeInsets.all(24.0),
                           child: CustomPaint(
-                            size: Size(300, 300),
+                            size: const Size(300, 300),
                             painter: DrawingPainter(
-                              drawing: _drawing,
+                              drawing: QuizManager.instance.drawing,
                             ),
                           ),
                         )
                       ],
                     ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    margin: EdgeInsets.all(16),
                   ),
                 ],
               ),
@@ -197,9 +178,7 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
 
   // TODO: Implement _loadInterstitialAd()
 
-
   // TODO: Implement _loadRewardedAd()
-
 
   @override
   void dispose() {
@@ -221,11 +200,7 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
 
   @override
   void onNewLevel(int level, Drawing drawing, String clue) {
-    setState(() {
-      _level = level;
-      _drawing = drawing;
-      _clue = clue;
-    });
+    setState(() {});
 
     // TODO: Load an Interstitial Ad
   }
@@ -241,7 +216,7 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Game over!'),
+          title: const Text('Game over!'),
           content: Text('Score: $correctAnswers/5'),
           actions: [
             TextButton(
@@ -260,9 +235,7 @@ class _GameRouteState extends State<GameRoute> implements QuizEventListener {
 
   @override
   void onClueUpdated(String clue) {
-    setState(() {
-      _clue = clue;
-    });
+    setState(() {});
 
     _showSnackBar('You\'ve got one more clue!');
   }

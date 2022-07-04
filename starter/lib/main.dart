@@ -22,17 +22,16 @@ import 'package:google_fonts/google_fonts.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
     statusBarIconBrightness: Brightness.dark,
   ));
 
   runApp(
     MaterialApp(
-      home: HomeRoute(),
       routes: <String, WidgetBuilder>{
-        '/home': (BuildContext context) => new HomeRoute(),
-        '/game': (BuildContext context) => new GameRoute()
+        '/': (BuildContext context) => const HomeRoute(),
+        '/game': (BuildContext context) => const GameRoute()
       },
       theme: ThemeData(
         primaryColor: AppTheme.primary,

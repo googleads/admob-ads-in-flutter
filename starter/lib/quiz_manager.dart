@@ -16,7 +16,7 @@ import 'package:awesome_drawing_quiz/drawing.dart';
 
 class QuizManager {
 
-  static int _maxGameLevel = 5;
+  static const _maxGameLevel = 5;
 
   QuizManager._();
 
@@ -69,7 +69,6 @@ class QuizManager {
     _isHintUsed = true;
     _disclosedLettersCnt++;
     _clue = _generateClue();
-    print(_clue);
 
     listener?.onClueUpdated(_clue);
   }
@@ -113,12 +112,12 @@ class QuizManager {
       case 5:
         return Drawing.brain();
       default:
-        throw new Exception('Invalid level: $level');
+        throw Exception('Invalid level: $level');
     }
   }
 
   String _generateClue() {
-    StringBuffer b = new StringBuffer();
+    final b = StringBuffer();
     int charDisclosed = 0;
 
     for (int i = 0; i < _drawing.word.length; i++) {

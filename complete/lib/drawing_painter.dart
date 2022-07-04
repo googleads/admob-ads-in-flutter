@@ -16,9 +16,9 @@ import 'package:awesome_drawing_quiz/drawing.dart';
 import 'package:flutter/material.dart';
 
 class DrawingPainter extends CustomPainter {
-  Drawing drawing;
+  final Drawing drawing;
 
-  Paint _paint = new Paint()
+  final Paint _paint = Paint()
     ..color = Colors.black
     ..strokeCap = StrokeCap.round
     ..style = PaintingStyle.stroke
@@ -30,9 +30,9 @@ class DrawingPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    drawing.strokes.forEach((stroke) {
-      var points = stroke.points;
-      assert(points.length > 0);
+    for (final stroke in drawing.strokes) {
+      final points = stroke.points;
+      assert(points.isNotEmpty);
 
       Path path = Path();
       path.moveTo(
@@ -48,12 +48,12 @@ class DrawingPainter extends CustomPainter {
       }
 
       canvas.drawPath(path, _paint);
-    });
+    }
   }
 
   @override
   bool shouldRepaint(DrawingPainter oldDelegate) {
-    return oldDelegate.drawing.word != this.drawing.word;
+    return oldDelegate.drawing.word != drawing.word;
   }
 
   double _scale(num original, num axisLength) {
