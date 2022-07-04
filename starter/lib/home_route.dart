@@ -17,14 +17,9 @@ import 'package:flutter/material.dart';
 
 // TODO: Import google_mobile_ads.dart
 
-class HomeRoute extends StatefulWidget {
+class HomeRoute extends StatelessWidget {
   const HomeRoute({Key? key}) : super(key: key);
 
-  @override
-  State<HomeRoute> createState() => _HomeRouteState();
-}
-
-class _HomeRouteState extends State<HomeRoute> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
