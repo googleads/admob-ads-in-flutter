@@ -17,12 +17,9 @@ import 'package:flutter/material.dart';
 
 // TODO: Import google_mobile_ads.dart
 
-class HomeRoute extends StatefulWidget {
-  @override
-  _HomeRouteState createState() => _HomeRouteState();
-}
+class HomeRoute extends StatelessWidget {
+  const HomeRoute({Key? key}) : super(key: key);
 
-class _HomeRouteState extends State<HomeRoute> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,43 +32,41 @@ class _HomeRouteState extends State<HomeRoute> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
+                const Text(
                   "Awesome Drawing Quiz!",
-                  style: TextStyle(
-                    fontSize: 32,
-                  ),
+                  style: TextStyle(fontSize: 32),
                   textAlign: TextAlign.center,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 72),
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 72),
                 ),
                 if (snapshot.hasData)
                   ElevatedButton(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 48.0,
-                        vertical: 12.0,
-                      ),
-                      child: Text('Let\'s get started!'),
-                    ),
                     style: ElevatedButton.styleFrom(
                       primary: Theme.of(context).accentColor,
                     ),
                     onPressed: () {
                       Navigator.of(context).pushNamed('/game');
                     },
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 48.0,
+                        vertical: 12.0,
+                      ),
+                      child: Text('Let\'s get started!'),
+                    ),
                   )
                 else if (snapshot.hasError)
-                  Icon(
+                  const Icon(
                     Icons.error_outline,
                     color: Colors.red,
                     size: 60,
                   )
                 else
-                  SizedBox(
-                    child: CircularProgressIndicator(),
+                  const SizedBox(
                     width: 48,
                     height: 48,
+                    child: CircularProgressIndicator(),
                   ),
               ],
             ),
